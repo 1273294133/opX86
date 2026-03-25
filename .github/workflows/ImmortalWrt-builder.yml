@@ -1,10 +1,13 @@
-name: OpenWrt Build
+name: ImmortalWrt 24.10.5 Build
 
 on:
   workflow_dispatch:
 
 permissions:
   contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -13,52 +16,51 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set environment
-        run: |
-          echo "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true" >> $GITHUB_ENV
-
-      - name: Initialization
+      - name: Init Environment
         run: |
           sudo apt update -y
-          sudo apt install -y build-essential ccache
-          sudo timedatectl set-timezone Asia/Shanghai
+          sudo apt install -y build-essential ccache flex git gawk libncurses-dev python3
 
-      - name: Clone ImmortalWrt source
+      - name: Clone ImmortalWrt 24.10.5
         run: |
-          git clone https://github.com/immortalwrt/immortalwrt -b 24.10 openwrt
+          git clone https://github.com/immortalwrt/immortalwrt -b v24.10.5 openwrt
 
-      - name: Copy config & scripts
+      - name: Copy Config & Scripts
         run: |
-          cp .config openwrt/.config
+          cp .config openwrt/
           cp diy-part2.sh openwrt/
           chmod +x openwrt/diy-part2.sh
 
-      - name: Update feeds
+      - name: Update & Install Feeds
         run: |
           cd openwrt
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: Run custom script
+      - name: Run diy-part2.sh
         run: |
           cd openwrt
           ./diy-part2.sh
 
-      - name: Download dependencies
+      - name: Make Defconfig
         run: |
           cd openwrt
           make defconfig
+
+      - name: Download Dependencies
+        run: |
+          cd openwrt
           make download -j$(nproc)
 
-      - name: Compile firmware
+      - name: Compile Firmware
         run: |
           cd openwrt
           make -j$(nproc) || make -j1 V=s
 
-      - name: Upload firmware
+      - name: Upload Firmware
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: build-${{ github.run_id }}
+          tag_name: 24.10.5-${{ github.run_id }}
           files: openwrt/bin/targets/x86/64/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
