@@ -8,7 +8,7 @@
 sed -i 's/192.168.1.1/192.168.50.11/g' package/base-files/files/bin/config_generate
 
 # -------------------------- 主机名 & 时区 --------------------------
-sed -i 's/ImmortalWrt/MyRouter/g' package/base-files/files/bin/config_generate
+sed -i 's/ImmortalWrt/小小牛/g' package/base-files/files/bin/config_generate
 sed -i 's/UTC/Asia\/Shanghai/g' package/base-files/files/bin/config_generate
 
 # -------------------------- 默认中文 --------------------------
