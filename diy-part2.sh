@@ -3,7 +3,7 @@
 # 后台IP
 sed -i 's/192.168.1.1/192.168.50.11/g' package/base-files/files/bin/config_generate
 
-# 主机名
+# 主机名改为 NiuWrt（英文，稳定不乱码）
 sed -i 's/ImmortalWrt/NiuWrt/g' package/base-files/files/bin/config_generate
 
 # 时区
