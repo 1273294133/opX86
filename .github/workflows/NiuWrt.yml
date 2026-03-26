@@ -6,11 +6,13 @@ on:
 permissions:
   contents: write
 
+# 🔥 全局强制 Node24 → 警告彻底消失
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-22.04
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
